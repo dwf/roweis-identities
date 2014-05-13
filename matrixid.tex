@@ -1,0 +1,403 @@
+\documentclass[11pt]{article}
+
+\title{matrix identities}
+\author{sam roweis}
+\date{(revised June 1999)}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+%\usepackage[top=1.5in, bottom=1.5in, nohead]{geometry}
+\usepackage[nohead]{geometry}
+
+% Change vectors to bolded text rather than the arrow notation.
+\renewcommand{\vec}[1]{\mathbf{#1}}
+
+% Define a new command for matrices to do the same thing.
+\newcommand{\mat}[1]{\mathbf{#1}}
+
+% Reappropriate \t for a capital T
+\renewcommand{\t}{T}
+
+% Define \inv for the '-1' superscript
+\newcommand{\inv}{{-1}}
+
+% Set things up to match Sam's settings for equation numbering. 
+\numberwithin{equation}{subsection}
+\renewcommand{\theequation}{\arabic{subsection}\alph{equation}}
+
+\parindent 0in
+
+\begin{document}
+\maketitle
+
+\textbf{note} that $\vec{a}$, $\vec{b}$, $\vec{c}$ and $\mat{A}$, 
+$\mat{B}$, $\mat{C}$ do not depend on $\mat{X}$, $\mat{Y}$, 
+$\vec{x}$, $\vec{y}$, or $z$.
+
+\subsection{basic formulae}
+\begin{align}
+\mat{A}(\mat{B} + \mat{C}) & = \mat{AB} + \mat{BC} & \\
+(\mat{A} + \mat{B})^\t & = \mat{A}^\t + \mat{B}^\t &\\
+(\mat{AB})^\t & = \mat{B}^\t\mat{A}^\t & \\
+(\mat{AB})^{-1} & = 
+	\mat{B}^\inv \mat{A}^\inv \ \text{(if individual inverses exist)} \\
+(\mat{A}^\inv)^\t & = (\mat{A}^\t)^\inv
+\end{align}
+\subsection{trace, determinant and rank}
+\begin{align}
+|\mat{AB}| & = |\mat{A}||\mat{B}|  \\
+|\mat{A}^\inv| & = \frac{1}{|\mat{A}|}  \\
+|\mat{A}| & = \prod \text{eigenvalues}  \\
+\mathrm{Tr}(\mat{A}) & = \sum \text{eigenvalues}  \\
+\text{if the cyclic products are well-defined, } & \notag \\
+\mathrm{Tr}[\mat{A}\mat{B}\mat{C} \ldots] = \mathrm{Tr}[\mat{B}\mat{C} 
+\ldots \mat{A}] & = \mathrm{Tr}[\mat{C} \ldots \mat{A}\mat{B}] = \ldots   \\
+\mathrm{rank}[\mat{A}] = \mathrm{rank}[\mat{A}^\t ] 
+& = \mathrm{rank}[\mat{A}^\t \mat{A}] = \mathrm{rank}[\mat{AA}^\t]  \\
+\text{condition number} & = \gamma = 
+	\sqrt{\frac{\text{biggest eigenvalue}}{\text{smallest eigenvalue}}} 
+\end{align}
+
+\textbf{derivatives} of scalar forms with respect to scalars,
+vectors, or matrices are indexed in the obvious way.
+similarly, the indexing for derivatives of vectors and matrices
+with respect to scalars is straightforward.
+\subsection{derivatives of traces}
+\begin{align}
+% d(Tr[X]) / dX = I
+\frac{
+	\partial \mathrm{Tr}[\mat{X}]
+}{
+	\partial \mat{X}
+} & = \mat{I} \\
+%  d Tr[XA]/dX = dTr[AX]/dX = A^T
+\frac{
+	\partial \mathrm{Tr}[\mat{XA}]
+}{
+	\partial \mat{X}
+} = 
+\frac{
+	\partial \mathrm{Tr}[\mat{AX}]
+}{
+	\partial \mat{X}
+} & = \mat{A}^\t \\
+% dTr(X^tA)/dX = dTr(AX^T)/dX = A
+\frac{
+	\partial \mathrm{Tr}[\mat{X}^\t\mat{A}]
+}{
+	\partial \mat{X}
+} = 
+\frac{
+	\partial \mathrm{Tr}[\mat{AX}^\t]
+}{
+	\partial \mat{X}
+} & = \mat{A} \\
+% dTr(X^T A X) / dX
+\frac{
+	\partial \mathrm{Tr}[\mat{X}^\t \mat{A} \mat{X} ]
+}{
+	\partial \mat{X}
+} & = (\mat{A} + \mat{A}^\t)\mat{X} \\
+% dTr(X^-1 A) / dX = -X^-1 A X^-1
+\frac{
+	\partial \mathrm{Tr}[\mat{X}^\inv \mat{A}]
+}{
+	\partial \mat{X}
+} & = -\mat{X}^\inv \mat{A}^\t \mat{X}^\inv
+\end{align}
+\subsection{derivatives of determinants}
+\begin{align}
+% d AXB/dX = |AXB|(X^-1)^T = |AXB|(X^T)^-1
+\frac{
+	\partial |\mat{AXB}|
+}{
+	\partial \mat{X}
+} & =
+|\mat{AXB}|(\mat{X}^\inv)^\t = 
+|\mat{AXB}|(\mat{X}^\t)^\inv \\
+% d ln|X| / dX = (X^-1)^T = (X^T)^-1
+\frac{
+	\partial \ln |\mat{X}|
+}{
+	\partial \mat{X}
+} & =
+(\mat{X}^\inv)^\t = (\mat{X}^\t)^\inv \\
+%
+\frac{
+	\partial \ln \mat{X}(z)
+}{
+	\partial z
+} & = \mathrm{Tr}
+\left[
+		\mat{X}^\inv \frac{\partial \mat{X}}{\partial z}
+\right] \\
+%
+\frac{
+	\partial |\mat{X}^\t \mat{A} \mat{X}|
+	}{
+	\partial \mat{X}
+	} & = 
+	|\mat{X}^\t \mat{AX}| 
+	\left(
+		\mat{AX} (\mat{X}^\t \mat{AX})^\inv +
+	\mat{A}^\t \mat{X} (\mat{X}^\t \mat{A}^\t \mat{X}
+	\right)^\inv)
+\end{align}
+\subsection{derivatives of scalar forms}
+\begin{align}
+%
+\frac{
+	\partial \left( \vec{a}^\t \vec{x} \right)
+}{
+	\partial \vec{x}
+} & = \frac{
+	\partial \left( \vec{x}^\t \vec{a} \right)
+}{
+	\partial \vec{x}
+} = \vec{a} \\
+%
+\frac{
+	\partial \left(\vec{x}^\t \mat{A} \vec{x} \right)
+}{
+	\partial \vec{x}
+} & = \left(\mat{A} + \mat{A}^\t\right) \vec{x} \\
+%
+\frac{
+	\partial \left(\vec{a}^\t \mat{X} \vec{b}\right)
+}{
+	\partial \mat{X}
+} & = \vec{a}\vec{b}^\t \\
+%
+\frac{
+	\partial \left(\vec{a}^\t \mat{X}^\t \vec{b}\right)
+}{
+	\partial \mat{X}
+} & = \vec{b}\vec{a}^\t \\
+% 
+\frac{
+	\partial \left(\vec{a}^\t \mat{X} \vec{a}\right)
+}{
+	\partial \vec{X}
+} & =
+\frac{\partial \left(
+		\vec{a}^\t \mat{X}^\t \vec{a}
+	\right)
+}{
+	\partial \mat{X}
+} =
+\vec{a}\vec{a}^\t \\
+%
+\frac{
+	\partial \left(\vec{a}^\t \mat{X}^\t \mat{C} \mat{X} \vec{b}\right)
+}{
+	\partial \mat{X}
+} & = \mat{C}^\t \mat{X} \vec{a}\vec{b}^\t + 
+	\mat{C} \mat{X} \vec{b}\vec{a}^\t \\
+%
+\frac{\partial \left(
+		\left( 
+			\mat{X} \vec{a} + \vec{b}
+		\right)^\t 
+		\mat{C}
+		\left(
+			\mat{X} \vec{a} + \vec{b}
+		\right)
+	\right)
+	}{
+	\partial \mat{X}
+	} & = 
+	\left(
+		\mat{C} + \mat{C}^\t
+	\right)
+	\left(
+		\mat{X}\vec{a} + \vec{b}
+	\right)\vec{a}^\t
+\end{align}
+
+
+the \textbf{derivative} of one vector $\vec{y}$ with respect to another vector
+$\vec{x}$ is a matrix whose $(i, j)^{th}$ element is $\partial y_j / 
+\partial x_i$. such a derivative should be written as $\partial \vec{y}^\t / 
+\partial \vec{x}$ in which case it is the \textit{Jacobian matrix} of 
+$\vec{y}$ wrt $\vec{x}$. its determinant represents the ratio of the 
+hypervolume $d\vec{y}$ to that of $d\vec{x}$ so that $\int f(\vec{y}) 
+d\vec{y} = \int f(\vec{y}(\vec{x}))|\partial \vec{y}^\t / \partial \vec{x}|
+d \vec{x}$. however, the sloppy forms $\partial \vec{y} / \partial \vec{x}$, 
+$\partial \vec{y}^\t / \partial \vec{x}^\t$ and $\partial \vec{y} / 
+\partial \vec{x}^\t$ are often used for this Jacobian matrix.
+
+\subsection{derivatives of vector/matrix forms}
+
+\begin{align}
+\frac{
+	\partial \left(\mat{X}^\inv\right)
+}{
+	\partial z
+} & = -\mat{X}^\inv 
+\frac{
+	\partial \mat{X}
+}{
+	\partial z
+} \mat{X}^\inv \\
+%
+\frac{
+	\partial \left( \mat{A} \vec{x} \right)
+}{
+	\partial z
+} & = \mat{A} 
+\frac{
+	\partial \vec{x}
+}{
+	\partial z
+} \\
+%
+\frac{
+	\partial \left(\mat{XY}\right)
+}{
+	\partial z
+} & = \mat{X} \frac{\partial \mat{Y}}{\partial z} + 
+	\frac{\partial \mat{X}}{\partial z}\mat{Y} \\
+%
+\frac{
+	\partial \left(\mat{AXB}\right)
+}{
+	\partial z
+} & = \mat{A} \frac{\partial \mat{X}}{\partial z} \mat{B} \\
+%
+\frac{
+	\partial \left( \vec{x}^\t \mat{A} \right)
+}{
+	\partial \vec{x}
+} & = \mat{A} \\
+%
+\frac{
+	\partial \left( \vec{x}^\t \right)
+}{
+	\partial \vec{x}
+} & = \mat{I} \\
+%
+\frac{
+	\partial \left(\vec{x}^\t \mat{A} \vec{x} \vec{x}^\t \right)
+}{
+	\partial \vec{x}
+} 
+= & \left(\mat{A} + \mat{A}^\t\right)\vec{x}\vec{x}^\t + 
+\vec{x}^\t \mat{A} \vec{x} \mat{I}
+\end{align}
+\subsection{constrained maximization}
+the maximum over $\vec{x}$ of the quadratic form
+\begin{align}
+	\vec{\mu}^\t \vec{x} - \frac{1}{2} \vec{x}^\t \mat{A}^\inv \vec{x}
+\end{align}
+subject to the $J$ conditions $c_j(\vec{x}) = 0$ is given by:
+\begin{align}
+\mat{A}\vec{\mu} + \mat{A}\mat{C}\mat{\Lambda}, & & \ \ 
+\mat{\Lambda} = -4 \left(\mat{C}^\t \mat{A} \mat{C}\right) 
+\mat{C}^\t \mat{A} \vec{\mu}
+\end{align}
+where the $j^{th}$ column of $\mat{C}$ is $\partial c_j (\vec{x}) /
+\partial \vec{x}$
+\subsection{symmetric matrices}
+have real eigenvalues, though perhaps not distinct and can always be
+diagonalized to the form 
+\begin{align}
+	\mat{A} & = \mat{C}\mat{\Lambda}\mat{C}^\t \tag{8}
+\end{align}
+
+where the columns of $\vec{C}$ are (orthonormal) eigenvectors (i.e.
+$\mat{CC}^\t = \mat{I}$) and the diagonal of $\mat{\Lambda}$ has the
+eigenvalues
+
+\subsection{block matrices}
+
+for conformably partitioned block matrices, addition and multiplication is
+performed by adding and multiplying blocks in exactly the same way as scalar
+elements of regular matrices.
+
+however, determinants and inverses of block matrices are very tricky: for 
+2 blocks by 2 blocks the results are:
+
+\begin{align}
+	\left|
+	\begin{array}{cc}
+		\mat{A}_{11} & \mat{A}_{12} \\
+		\mat{A}_{21} & \mat{A}_{22} 
+	\end{array} \right| & = |\mat{A}_{22}| \cdot |\mat{F}_{11}|
+	= |\mat{A}_{11}| \cdot |\mat{F}_{22}| \\
+	\left[ \begin{array}{cc}
+		\mat{A}_{11} & \mat{A}_{12} \\
+		\mat{A}_{21} & \mat{A}_{22} 
+	\end{array} 
+	\right]^\inv & =
+	\left[
+	\begin{array}{cc}
+	\mat{F}_{11}^\inv & -\mat{A}_{11}^\inv \mat{A}_{12} \mat{F}_{22}^\inv \\
+	- \mat{F}_{22}^\inv \mat{A}_{21} \mat{A}_{11}^\inv & \mat{F}_{22}^\inv 
+	\end{array}
+	\right] \\
+	& = 
+	\left[ 
+	\begin{array}{cc}
+	% (1, 1)
+	\mat{A}_{11}^\inv + \mat{A}_{11}^\inv \mat{A}_{12}
+	\mat{F}_{22}^\inv \mat{A}_{21} \mat{A}_{11}^\inv 
+	&
+	% (1, 2)
+	- \mat{F}_{11}^\inv \mat{A}_{12} \mat{A}_{22}^\inv
+	\\
+	% (2, 1)
+	- \mat{A}_{22}^\inv \mat{A}_{21} \mat{F}_{11}^\inv
+	&
+	% (2, 2)
+	\mat{A}_{22}^\inv + \mat{A}_{22}^\inv \mat{A}_{21} \mat{F}_{11}^\inv
+	\mat{A}_{12} \mat{A}_{22}^\inv
+	\end{array}
+	\right] \notag
+\end{align}
+where 
+\begin{align*}
+\mat{F}_{11} = \mat{A}_{11} - \mat{A}_{12} \mat{A}_{22}^{-1} \mat{A}_{21}
+& &
+\mat{F}_{22} = \mat{A}_{22} - \mat{A}_{21} \mat{A}_{11}^{-1} \mat{A}_{12}
+\end{align*}
+
+for \textit{block diagonal} matrices things are much easier:
+\begin{align}
+\left| 
+	\begin{array}{cc}
+		\mat{A}_{11}  & \mat{0}     \\
+		\mat{0}       & \mat{A}_{22}
+	\end{array}
+\right| & = |\mat{A}_{11}||\mat{A}_{22}| \\
+\left[
+	\begin{array}{cc}
+		\mat{A}_{11}  & \mat{0}      \\
+		\mat{0}       & \mat{A}_{22}
+	\end{array}
+\right] & = 
+\left[
+	\begin{array}{cc}
+		\mat{A}_{11}^\inv & \mat{0} \\
+		\mat{0}           & \mat{A}_{22}^\inv
+	\end{array}
+\right]
+\end{align}
+
+\subsection{matrix inversion lemma (sherman-morrison-woodbury)}
+using the above results for block matrices we can make some
+substitutions and get the following important results:
+\begin{align}
+(\mat{A} + \mat{XBX}^\t)^\inv & = \mat{A}^\inv - \mat{A}^\inv \mat{X}
+	(\mat{B}^\inv + \mat{X}^\t \mat{A}^\inv \mat{X})^\inv \mat{X}^\t 
+	\mat{A}^\inv \\
+|\mat{A} + \mat{X}\mat{B}\mat{X}|^\t & = |\mat{B}||\mat{A}|
+	|\mat{B}^\inv + \mat{X}^\t \mat{A}^\inv \mat{X}|
+\end{align}
+where $\mat{A}$ and $\mat{B}$ are \textit{square} and \textit{invertible}
+matrices but need not be of the same dimension. this lemma often allows 
+a really hard inverse to be converted into an easy inverse. the most 
+typical example of this is when $\mat{A}$ is large but diagonal, and
+$\mat{X}$ has many rows but few columns.
+\end{document}
